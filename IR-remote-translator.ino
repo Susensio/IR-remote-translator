@@ -7,6 +7,7 @@
 int IR_PIN = 11;
 
 IRrecv irDetect(IR_PIN);
+IRsend irsend;
 
 decode_results irIn;
 
