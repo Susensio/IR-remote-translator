@@ -6,6 +6,7 @@ Translates IR basic commands from LG remote to Samsung home cinema
 | ON/OFF   | 20DF10EF | C2CA807F |
 | Vol+     | 20DF40BF | C2CACC33 |
 | Vol-     | 20DFC03F | C2CADC23 |
+| Mute     | ######## | ######## |
 
 
 ## Prerequisites
@@ -15,7 +16,7 @@ Arduino libraries used in this project:
 
 ## Usage
 
-TODO
+Connect IR receiver to pin 11 and IR led to pin 3
 
 ## Credits
 
