@@ -1,5 +1,6 @@
 # IR remote translator
-Translates IR basic commands from LG remote to Samsung home cinema
+
+Translates IR basic commands from LG remote to Samsung home cinema. This allows volume control of digital audio signal with one single remote.
 
 | Command  | LG   ==> | Samsung  |
 | -------- | -------- | -------- |
@@ -9,14 +10,18 @@ Translates IR basic commands from LG remote to Samsung home cinema
 | Mute     | 20DF906F | C2CA9C63 |
 
 
-## Prerequisites
+## Dependencies
+
 Arduino libraries used in this project:
 
 - [IRremote](https://github.com/z3t0/Arduino-IRremote)
 
 ## Usage
 
-Connect IR receiver to pin 11 and IR led to pin 3
+Connect IR receiver to pin 4 and IR led to pin 3
+
+![alt text](schematic.png "Schematic")
+
 
 ## Credits
 

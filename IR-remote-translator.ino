@@ -15,19 +15,16 @@ decode_results irIn;
 
 unsigned long lastCode;
 
-//unsigned int  onOff[67] = {4400,4450, 550,1650, 550,1650, 600,500, 550,550, 550,550, 600,500, 550,1650, 550,550, 550,1650, 550,1650, 600,500, 550,550, 600,1600, 600,500, 550,1700, 550,500, 550,1700, 550,550, 600,500, 550,550, 600,500, 550,550, 600,500, 550,550, 550,550, 600,1600, 550,1650, 550,1650, 550,1650, 550,1650, 550,1650, 550,1650, 550};  // SAMSUNG C2CA807F
-//unsigned int  volUp[67] = {4450,4400, 600,1650, 550,1650, 550,550, 550,550, 550,550, 550,550, 550,1650, 550,550, 550,1650, 550,1650, 550,550, 550,550, 550,1650, 600,500, 550,1650, 600,500, 550,1650, 550,1650, 550,550, 600,500, 550,1650, 600,1600, 600,550, 550,550, 550,550, 550,500, 600,1650, 550,1650, 550,550, 550,550, 550,1650, 550,1650, 550};  // SAMSUNG C2CACC33
-//unsigned int  volDown[67] = {4450,4400, 600,1650, 550,1650, 550,550, 550,550, 550,550, 550,550, 550,1650, 600,500, 550,1650, 550,1650, 550,550, 550,550, 550,1650, 600,500, 550,1600, 650,500, 550,1650, 550,1650, 550,550, 550,1650, 550,1650, 550,1650, 600,500, 600,500, 600,500, 600,500, 550,1700, 550,550, 550,550, 550,500, 600,1650, 550,1600, 600};  // SAMSUNG C2CADC23
-
 
 void setup() {
-    // Serial.begin(115200);
     irDetect.enableIRIn(); // Start the Receiver
+
     pinMode(LED_BUILTIN ,OUTPUT);
 
     // IR receiver power pins
     pinMode(IR_VCC_PIN, OUTPUT);
     digitalWrite(IR_VCC_PIN, HIGH);
+
     pinMode(IR_GND_PIN, OUTPUT);
     digitalWrite(IR_GND_PIN, LOW);
 }
@@ -41,52 +38,44 @@ void loop() {
 }
 
 
-void decodeIR() { // Indicate what key is pressed
+void decodeIR() {           // Indicate what key is pressed
+    static unsigned long lastCode;
+    unsigned long code = 0;
+
     switch(irIn.value) {
-        case 0x20DF10EF:  // ON/OFF
-            digitalWrite(LED_BUILTIN, HIGH);
-            // Serial.println("On/off"); 
-            lastCode = 0xC2CA807F;
-            irsend.sendSAMSUNG(lastCode, 32);
+        case 0x20DF10EF:    // ON/OFF
+            code = 0xC2CA807F;
             break;
 
-        case 0x20DF40BF:  // Vol+
-            digitalWrite(LED_BUILTIN, HIGH);
-            // Serial.println("Vol up"); 
-            lastCode = 0xC2CACC33;
-            irsend.sendSAMSUNG(lastCode, 32);
+        case 0x20DF40BF:    // Vol+
+            code = 0xC2CACC33;
             break;
 
-        case 0x20DFC03F:  // Vol-
-            digitalWrite(LED_BUILTIN, HIGH);
-            // Serial.println("Vol down"); 
-            lastCode = 0xC2CADC23;
-            irsend.sendSAMSUNG(lastCode, 32);
+        case 0x20DFC03F:    // Vol-
+            code = 0xC2CADC23;
             break;
 
-        case 0x20DF906F:  // Mute
-            digitalWrite(LED_BUILTIN, HIGH);
-            // Serial.println("Mute"); 
-            lastCode = 0xC2CA9C63;
-            irsend.sendSAMSUNG(lastCode, 32);
+        case 0x20DF906F:    // Mute
+            code = 0xC2CA9C63;
             break;
             
-        case 0xFFFFFFFF:  
-            // Serial.println("Repeat"); 
-            if (lastCode != 0){
-                digitalWrite(LED_BUILTIN, HIGH);
-                irsend.sendSAMSUNG(lastCode, 32);
-            }
+        case 0xFFFFFFFF:    // Repeat
+            code = lastCode;
             break;
 
-        default: 
-            // Serial.println("Other"); 
-            lastCode = 0;
+        default:        // Not a valid key
+            code = 0;
             break;
+    }
+
+    if (code != 0){
+        digitalWrite(LED_BUILTIN, HIGH);
+        irsend.sendSAMSUNG(code, 32);
 
     }
+
+    lastCode = code;
+
     delay(10);
     digitalWrite(LED_BUILTIN, LOW);
-    
-    // Serial.println(lastCode,HEX);
 }
